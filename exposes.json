@@ -1,0 +1,38 @@
+{
+    "name": "well-cube-components",
+    "version": "v0.0.1",
+    "css": [],
+    "components": [
+        {
+            "name": "AirPlus",
+            "defaultExport": true,
+            "description": "Component to display all the telemetry from a WellCube Air+ device.",
+            "capabilities": {
+                "tvoc": "optional",
+                "pm10": "optional",
+                "pm25": "optional",
+                "proximity_meters": "optional",
+                "life_percent": "optional",
+                "noise_db": "optional",
+                "cct": "optional",
+                "brightness_lux": "optional",
+                "humidity": "optional",
+                "temp_celcius": "optional",
+                "co2": "optional",
+                "timemstamp_unix": "optional"
+            },
+            "settings": [
+                {
+                    "name": "temperature_format",
+                    "label": "Temperature Format",
+                    "description": "Choose between Celsius and Fahrenheit.",
+                    "default": "f",
+                    "options": [
+                        { "value": "c", "label": "Celsius" },
+                        { "value": "f", "label": "Fahrenheit" }
+                    ]
+                }
+            ]
+        }
+    ]
+}
