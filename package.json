@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
+    "component-vite-config": "github:iotstud-io/component-vite-config#semver:0.0.1",
     "vite": "^5.0.0",
     "vite-plugin-static-copy": "^0.17.0"
   },
