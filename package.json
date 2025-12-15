@@ -1,6 +1,6 @@
 {
   "name": "wellcube-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "WellCube Components for Iot Studio.",
   "type": "module",
   "scripts": {
