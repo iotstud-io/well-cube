@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Activity } from 'react'
 import { 
     colorFor,
     computeIndoorHealthIndex, 
@@ -9,12 +9,27 @@ import {
     tempColor
 } from './Functions'
 
+import HistoricChart from './HistoricChart'
+
+const small_chip ={
+    padding: '5px',
+    fontSize: '16px',
+}
+
+const dot_style = {
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    marginRight: '12px',
+}
+
 const AirPlus = ({ 
     title='Climate Sensors',
     theme,
+    historic=[],
     temp_celcius=null, 
     temp_fahrenheit=null, 
-    humidity=null,
+    humidity=0,
     co2=null, 
     tvoc=null,
     pm25=0,
@@ -28,6 +43,11 @@ const AirPlus = ({
 
     let format = 'f'
     let temperature = null
+    let show_chart = true
+
+    if(settings?.show_chart === false) {
+        show_chart = false
+    }
 
     if(settings?.temperature_format === 'c') {
         format = 'c'
@@ -59,17 +79,6 @@ const AirPlus = ({
     const h = humidity !== null ? `${roundUpIfNeeded(humidity)}% RH`: ''
     const tcolor = tempColor(temperature, format, theme)
 
-    const root_style = {
-        maxWidth: '625px',
-        boxShadow: `2px 2px 2px ${theme.palette.background.shadow}`,
-        padding: '15px 20px 15px 25px',
-        border: '1px solid transparent',
-        borderRadius: '10px',
-        background:
-            `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}) padding-box,
-             linear-gradient(135deg, ${theme.palette.background.paper}, #000000) border-box`
-    }
-
     const aqi_style = {
         flexShrink: 0,
         borderRadius: '50%',
@@ -88,118 +97,124 @@ const AirPlus = ({
         backgroundColor: theme.palette.background.paper,
     }
 
-    const small_chip ={
-        padding: '5px 15px',
-        fontSize: '16px',
+    const root_style = {
+        maxWidth: '527px',
+        boxShadow: `2px 2px 2px ${theme.palette.background.shadow}`,
+        padding: 0,
+        border: '1px solid transparent',
+        borderRadius: '10px',
+        background:
+            `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}) padding-box,
+             linear-gradient(135deg, ${theme.palette.background.paper}, #000000) border-box`
     }
-    
-    const dot_style = {
-        width: '12px',
-        height: '12px',
-        borderRadius: '50%',
-        marginRight: '12px',
-    }
 
-    return <div className='flx align-center justify-center gap20 wrap' style={root_style}>
+    return <div style={root_style}>
+        <div className='flx align-center justify-center gap20 wrap' style={{padding: '15px 5px'}}>
 
-        <div style={aqi_style}>
-            <div style={{fontSize: '16px', lineHeight: '12px'}}>AQI</div>
-            <div style={{fontSize: '60px', lineHeight: '54px'}}>{index}</div>
-            <div style={{fontSize: '16px', fontWeight: 'bold', lineHeight: '25px'}}>{health.label}</div>
-        </div>
-
-        <div  style={{padding: 0, margin: 0}}>
-
-            <div className='flx align-center justify-center wrap' style={{fontWeight: 'bold', fontSize: '20px', marginBottom: '4px'}}>
-
-                <span>{title}</span>
-                
-                <span style={{fontSize: '14px', fontStyle: 'italic', marginLeft: '10px', fontWeight: 'normal', color: theme.palette.text.secondary}}>
-                    As of {new Date(timemstamp_unix * 1000).toLocaleTimeString()}
-                </span>
-
+            <div style={aqi_style}>
+                <div style={{fontSize: '16px', lineHeight: '12px'}}>AQI</div>
+                <div style={{fontSize: '60px', lineHeight: '54px'}}>{index}</div>
+                <div style={{fontSize: '16px', fontWeight: 'bold', lineHeight: '25px'}}>{health.label}</div>
             </div>
 
-            <div className='flx align-center justify-center gap10 wrap' style={{maxWidth: '310px', marginTop: '10px'}}>
-            
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
+            <div  style={{padding: 0, margin: 0}}>
 
-                    <div style={{
-                        ...dot_style, 
-                        backgroundColor: colorFor(pm25, 0, 1000, theme),
-                        boxShadow: `0 0 4px 5px ${colorFor(pm25, 0, 1000, theme)}`
-                    }}></div>
+                <div className='flx align-center justify-center wrap' style={{fontWeight: 'bold', fontSize: '20px', marginBottom: '4px'}}>
 
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>PM2.5</div>
-                        <div>{Math.ceil(pm25)}</div>
-                    </div>
-                </div>
-
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
-
-                    <div style={{
-                        ...dot_style, 
-                        backgroundColor: colorFor(pm10, 0, 1000, theme),
-                        boxShadow: `0 0 4px 5px ${colorFor(pm10, 0, 1000, theme)}`
-                    }}></div>
-
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>PM10</div>
-                        <div>{Math.ceil(pm10)}</div>
-                    </div>
-                </div>
-
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
-
-                    <div style={{
-                        ...dot_style, 
-                        backgroundColor: colorFor(tvoc, 0, 1000, theme),
-                        boxShadow: `0 0 4px 5px ${colorFor(tvoc, 0, 1000, theme)}`
-                    }}></div>
-
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>TVOC</div>
-                        <div>{Math.ceil(tvoc)}</div>
-                    </div>
-                </div>
-                        
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
+                    <span>{title}</span>
                     
-                    <div style={{
-                        ...dot_style, 
-                        backgroundColor: colorFor(co2, 400, 5000, theme),
-                        boxShadow: `0 0 4px 5px ${colorFor(co2, 400, 5000, theme)}`
-                    }}></div>
+                    <span style={{fontSize: '14px', fontStyle: 'italic', marginLeft: '10px', fontWeight: 'normal', color: theme.palette.text.secondary}}>
+                        As of {new Date(timemstamp_unix * 1000).toLocaleTimeString()}
+                    </span>
 
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>CO&sup2;</div>
-                        <div>{Math.ceil(co2)}</div>
-                    </div>
                 </div>
 
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
+                <div className='flx align-center justify-center gap10 wrap' style={{maxWidth: '310px', marginTop: '10px'}}>
+                
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
 
-                    <div style={{
-                        ...dot_style, 
-                        backgroundColor: tcolor,
-                        boxShadow: `0 0 4px 5px ${tcolor}`
-                    }}></div>
+                        <div style={{
+                            ...dot_style, 
+                            backgroundColor: colorFor(pm25, 0, 1000, theme),
+                            boxShadow: `0 0 4px 5px ${colorFor(pm25, 0, 1000, theme)}`
+                        }}></div>
 
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>Temp</div>
-                        <div>{t}</div>
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>PM2.5</div>
+                            <div>{Math.ceil(pm25)}</div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='flx align-center justify-left' style={{...chip, ...small_chip}}>
-                    <div>
-                        <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>Humidity</div>
-                        <div>{h}</div>
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
+
+                        <div style={{
+                            ...dot_style, 
+                            backgroundColor: colorFor(pm10, 0, 1000, theme),
+                            boxShadow: `0 0 4px 5px ${colorFor(pm10, 0, 1000, theme)}`
+                        }}></div>
+
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>PM10</div>
+                            <div>{Math.ceil(pm10)}</div>
+                        </div>
+                    </div>
+
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
+
+                        <div style={{
+                            ...dot_style, 
+                            backgroundColor: colorFor(tvoc, 0, 1000, theme),
+                            boxShadow: `0 0 4px 5px ${colorFor(tvoc, 0, 1000, theme)}`
+                        }}></div>
+
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>TVOC</div>
+                            <div>{Math.ceil(tvoc)}</div>
+                        </div>
+                    </div>
+                            
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
+                        
+                        <div style={{
+                            ...dot_style, 
+                            backgroundColor: colorFor(co2, 400, 5000, theme),
+                            boxShadow: `0 0 4px 5px ${colorFor(co2, 400, 5000, theme)}`
+                        }}></div>
+
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>CO&sup2;</div>
+                            <div>{Math.ceil(co2)}</div>
+                        </div>
+                    </div>
+
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
+
+                        <div style={{
+                            ...dot_style, 
+                            backgroundColor: tcolor,
+                            boxShadow: `0 0 4px 5px ${tcolor}`
+                        }}></div>
+
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>Temp</div>
+                            <div>{t}</div>
+                        </div>
+                    </div>
+
+                    <div className='flx align-center justify-center' style={{...chip, ...small_chip}}>
+                        <div>
+                            <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>Humidity</div>
+                            <div>{h}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <Activity mode={historic?.length > 0 && show_chart ? 'visible' : 'hidden'}>
+            <HistoricChart historic={historic} theme={theme} />
+        </Activity>
+
     </div>
 }
 

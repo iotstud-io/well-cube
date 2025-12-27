@@ -7,13 +7,16 @@
     "dev": "vite --mode external",
     "build": "vite build"
   },
+  "dependencies": {
+    "@nivo/line": "^0.89.0"
+  },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": "19.2.2",
+    "react-dom": "19.2.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
-    "component-vite-config": "github:iotstud-io/component-vite-config#semver:0.0.1",
+    "component-vite-config": "github:iotstud-io/component-vite-config#semver:0.0.2",
     "vite": "^5.0.0",
     "vite-plugin-static-copy": "^0.17.0"
   },

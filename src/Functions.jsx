@@ -20,7 +20,7 @@ const pollutantScore = (key, value) => {
     const min = limits.min
     const max = limits.max
     const good = th.good ?? min
-    const bad = th.bad ?? max
+    //const bad = th.bad ?? max
 
     if(value <= good) return 100
     if(value >= max) return 0
@@ -55,7 +55,7 @@ export const computeIndoorHealthIndex = ({ pm25, pm10, co2, tvoc }) => {
     return scores.reduce((min, s) => (s < min ? s : min), 100)
 }
 
-export function describeIndoorHealth(index, th) {
+export const describeIndoorHealth = (index, th) => {
     if(index == null) return { label: 'unknown', color: th.palette.info.light }
     if(index >= 90) return { label: 'excellent', color: th.palette.success.main }
     if(index >= 75) return { label: 'good', color: th.palette.success.light }
@@ -88,14 +88,57 @@ export const colorFor = (v, min, max, th) => {
     return c[Math.min(3, Math.floor(t * 4))]
 }
 
-export const tempColor = (t, u, th)=> (
-    f => [
-        th.palette.info.main,
-        th.palette.info.light,
-        th.palette.success.light,
-        th.palette.success.main,
-        th.palette.warning.light,
-        th.palette.error.light,
-        th.palette.error.main
-    ][f <= 32 ? 0: f >= 100 ? 6: 1 + ((f-32)/68*5|0)]
-)(u==='f' ? t: t*9/5+32)
+export const tempColor = (t, u, th) => (
+    f => {
+        const colors = [
+            th.palette.secondary.dark,
+            th.palette.secondary.light,
+            th.palette.info.main,
+            th.palette.info.light,
+            th.palette.success.light,
+            th.palette.success.main,
+            th.palette.warning.light,
+            th.palette.error.light,
+            th.palette.error.main
+        ]
+
+        if(f <= 0) return colors[0]
+        if(f <= 16) return colors[1]
+        if(f <= 32) return colors[2]
+        if(f <= 55) return colors[3]
+        if(f <= 65) return colors[4]
+        if(f <= 80) return colors[5]
+        if(f <= 90) return colors[6]
+        if(f <= 100) return colors[7]
+        if(f >= 101) return colors[8]
+    }
+)(u === 'f' ? t : (t * 9 / 5 + 32))
+
+export const transformData = input => {
+
+    const historic = Array.isArray(input) ? input : input?.historic
+
+    if(!Array.isArray(historic) || historic.length === 0) return []
+
+    const firstRow = historic.find(r => r && typeof r === 'object')
+
+    if(!firstRow) return []
+
+    const keys = Object.keys(firstRow).filter(k => k !== 'timestamp')
+
+    return keys
+        .map(key => ({
+            id: key,
+            data: historic
+                .filter(p => p && typeof p.timestamp !== 'undefined' && p[key] !== undefined && p[key] !== null)
+                .map(p => ({
+                    x: new Date(p.timestamp * 1000).toLocaleTimeString(undefined, {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    }),
+                    y: roundUpIfNeeded(Number(p[key])),
+                })),
+        }))
+        .filter(series => series.data.length > 0)
+}

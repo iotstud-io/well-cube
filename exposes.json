@@ -30,6 +30,16 @@
                         { "value": "c", "label": "Celsius" },
                         { "value": "f", "label": "Fahrenheit" }
                     ]
+                },
+                {
+                    "name": "show_chart",
+                    "label": "Show Chart",
+                    "description": "Toggle to show or hide the Historical Data Chart.",
+                    "default": true,
+                    "options": [
+                        { "value": true, "label": "Show" },
+                        { "value": false, "label": "Hide" }
+                    ]
                 }
             ]
         }
