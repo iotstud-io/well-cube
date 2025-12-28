@@ -109,7 +109,7 @@ const AirPlus = ({
     }
 
     return <div style={root_style}>
-        <div className='flx align-center justify-center gap20 wrap' style={{padding: '15px'}}>
+        <div className='flx align-center justify-center gap20 wrap' style={{padding: '15px 15px 15px 20px'}}>
 
             <div style={aqi_style}>
                 <div style={{fontSize: '16px', lineHeight: '12px'}}>AQI</div>
