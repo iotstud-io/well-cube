@@ -17,11 +17,13 @@ const HistoricChart = ({historic, theme}) => {
 
     return <div style={containerStyle}>
         <ResponsiveLine /* or Line for fixed dimensions */
+            curve="monotoneX"
             data={data}
+            enableArea
             margin={{ top: 25, right: 14, bottom: 20, left: 40 }}
             yScale={{ type: 'linear', min: 0, max: 'auto', stacked: false }}
             lineWidth={1.5}
-            pointSize={10}
+            pointSize={5}
             pointColor={{ from: 'serieColor' }}
             pointBorderWidth={1.5}
             pointBorderColor={{ from: 'serieColor' }}
@@ -71,6 +73,29 @@ const HistoricChart = ({historic, theme}) => {
                     itemDirection: 'left-to-right',
                     symbolSize: 10,
                     symbolShape: 'circle',
+                }
+            ]}
+            defs={[
+                {
+                    colors: [
+                        {
+                            color: 'inherit',
+                            offset: 0
+                        },
+                        {
+                            color: 'inherit',
+                            offset: 100,
+                            opacity: 0
+                        }
+                    ],
+                    id: 'gradientA',
+                    type: 'linearGradient'
+                }
+            ]}
+            fill={[
+                {
+                    id: 'gradientA',
+                    match: '*'
                 }
             ]}
         />

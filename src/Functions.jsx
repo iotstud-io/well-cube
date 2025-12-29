@@ -91,8 +91,8 @@ export const colorFor = (v, min, max, th) => {
 export const tempColor = (t, u, th) => (
     f => {
         const colors = [
-            th.palette.secondary.dark,
-            th.palette.secondary.light,
+            th.palette.tertiary.dark,
+            th.palette.tertiary.main,
             th.palette.info.main,
             th.palette.info.light,
             th.palette.success.light,
