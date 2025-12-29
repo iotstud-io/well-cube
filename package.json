@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "5.1.2",
-    "component-vite-config": "file:../component-vite-config",
+    "component-vite-config": "github:iotstud-io/component-vite-config#semver:0.0.3",
     "vite": "7.3.0",
     "vite-plugin-static-copy": "3.1.4"
   },
