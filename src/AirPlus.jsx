@@ -3,9 +3,8 @@ import {
     colorFor,
     computeIndoorHealthIndex, 
     describeIndoorHealth,
+    handleTemp,
     roundUpIfNeeded,
-    c_to_f,
-    f_to_c,
     tempColor
 } from './Functions'
 
@@ -42,7 +41,6 @@ const AirPlus = ({
     const health = describeIndoorHealth(index, theme)
 
     let format = 'f'
-    let temperature = null
     let show_chart = true
 
     if(settings?.show_chart === false) {
@@ -53,29 +51,7 @@ const AirPlus = ({
         format = 'c'
     }
 
-    if(format === 'c') {
-
-        if(temp_celcius !== null) {
-            temperature = temp_celcius
-        } 
-
-        if(temp_celcius === null && temp_fahrenheit !== null) {
-            temperature = f_to_c(temp_fahrenheit)
-        }        
-    }
-
-    if(format === 'f') {
-
-        if(temp_fahrenheit !== null) {
-            temperature = temp_fahrenheit
-        }
-
-        if(temp_fahrenheit === null && temp_celcius !== null) {
-            temperature = c_to_f(temp_celcius)
-        }
-    }
-
-    const t = temperature !== null ? `${roundUpIfNeeded(temperature)}°${format}`: '--'
+    const { temperature, temperature_formatted } = handleTemp(format, temp_fahrenheit, temp_celcius)
     const h = humidity !== null ? `${roundUpIfNeeded(humidity)}% RH`: ''
     const tcolor = tempColor(temperature, format, theme)
 
@@ -197,7 +173,7 @@ const AirPlus = ({
 
                         <div>
                             <div style={{fontSize: '13px', color: theme.palette.text.secondary }}>Temp</div>
-                            <div>{t}</div>
+                            <div>{temperature_formatted}</div>
                         </div>
                     </div>
 
