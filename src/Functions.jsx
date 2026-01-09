@@ -142,3 +142,111 @@ export const transformData = input => {
         }))
         .filter(series => series.data.length > 0)
 }
+
+export const handleTemp = (format, temp_fahrenheit, temp_celcius) => {
+
+    let temperature = null
+
+    if(format === 'c') {
+    
+        if(temp_celcius !== null) {
+            temperature = temp_celcius
+        } 
+
+        if(temp_celcius === null && temp_fahrenheit !== null) {
+            temperature = f_to_c(temp_fahrenheit)
+        }        
+    }
+
+    if(format === 'f') {
+
+        if(temp_fahrenheit !== null) {
+            temperature = temp_fahrenheit
+        }
+
+        if(temp_fahrenheit === null && temp_celcius !== null) {
+            temperature = c_to_f(temp_celcius)
+        }
+    }
+
+    const temperature_formatted = temperature !== null ? `${roundUpIfNeeded(temperature)}°${format}`: '--'
+
+    return {temperature, temperature_formatted}
+}
+
+export const formatLux = lux => {
+
+    if(lux === null || typeof lux === 'undefined' || lux === '') return '--'
+
+    const n = Number(lux)
+
+    if(!Number.isFinite(n)) return '--'
+
+    if(n >= 1000) {
+        const k = n / 1000
+        const display = k >= 10 ? String(Math.round(k)) : String(parseFloat(k.toFixed(1)))
+        return `${display}k`
+    }
+
+    return String(Math.round(n))
+}
+
+const LUX_MIN = 7
+const LUX_MAX = 30000
+const LUX_COLOR_STEPS = 10
+const LUX_COLORS = [
+    '#383838',
+    '#4a4a4a',
+    '#5c5c5c',
+    '#6e6e6e',
+    '#808080',
+    '#929292',
+    '#a4a4a4',
+    '#b0b0b0',
+    '#b8b8b8',
+    '#bdbdbd',
+]
+
+export const luxToColor = lux => {
+    if (lux === null || typeof lux === 'undefined' || lux === '') return LUX_COLORS[0]
+
+    const n = Number(lux)
+    if (!Number.isFinite(n)) return LUX_COLORS[0]
+
+    if (n <= LUX_MIN) return LUX_COLORS[0]
+    if (n >= LUX_MAX) return LUX_COLORS[LUX_COLORS.length - 1]
+
+    const t = (n - LUX_MIN) / (LUX_MAX - LUX_MIN)
+    const idx = Math.min(LUX_COLOR_STEPS - 1, Math.floor(t * LUX_COLOR_STEPS))
+    return LUX_COLORS[idx]
+}
+
+export const roomReady = (aqi, temp, lux) => {
+
+    let adjustments = ''
+
+    if(lux < 300) {
+        adjustments += 'Lighting'
+    }
+
+    if(aqi < 75) {
+        if(adjustments.length > 0) adjustments += ', '
+        adjustments += 'Air Quality'
+    }
+
+    if(temp < 68 || temp > 76) {
+        if(adjustments.length > 0) adjustments += ', '
+        adjustments += 'Temperature'
+    }
+
+    const explanation = {
+        ready: 'Room conditions are optimal for comfort and productivity.',
+        warning: `Room conditions need adjustments: ${adjustments}.`
+    }
+
+    if(adjustments.length === 0) {
+        return { isReady: true, explanation: explanation.ready }
+    }
+
+    return { isReady: false, explanation: explanation.warning }
+}
