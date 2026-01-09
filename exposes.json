@@ -42,6 +42,31 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "RoomReadiness",
+            "defaultExport": true,
+            "description": "Component to display the readiness of a room based on WellCube sensors.",
+            "capabilities": {
+                "tvoc": "optional",
+                "pm10": "optional",
+                "pm25": "optional",
+                "brightness_lux": "optional",
+                "temp_celcius": "optional",
+                "co2": "optional"
+            },
+            "settings": [
+                {
+                    "name": "temperature_format",
+                    "label": "Temperature Format",
+                    "description": "Choose between Celsius and Fahrenheit.",
+                    "default": "f",
+                    "options": [
+                        { "value": "c", "label": "Celsius" },
+                        { "value": "f", "label": "Fahrenheit" }
+                    ]
+                }
+            ]
         }
     ]
 }
