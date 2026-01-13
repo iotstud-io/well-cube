@@ -241,7 +241,7 @@ export const roomReady = (aqi, temp, lux) => {
 
     const explanation = {
         ready: 'Room conditions are optimal for comfort and productivity.',
-        warning: `Room conditions need adjustments: ${adjustments}.`
+        warning: `Room conditions need adjustments:\n${adjustments}.`
     }
 
     if(adjustments.length === 0) {
