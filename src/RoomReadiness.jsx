@@ -11,7 +11,7 @@ import {
 } from './Functions'
 
 const RoomReadiness = ({ 
-    title='Climate Sensors',
+    title='',
     theme,
     temp_celcius=null, 
     temp_fahrenheit=null, 
@@ -37,14 +37,15 @@ const RoomReadiness = ({
     const brightness_color = luxToColor(brightness_lux)
 
     const root_style = {
-        maxWidth: '430px',
+        width: '100%',
+        height: '100%',
         boxShadow: `2px 2px 2px ${theme.palette.background.shadow}`,
         padding: '11px 15px',
         border: '1px solid transparent',
         borderRadius: '10px',
         background:
             `linear-gradient(${theme.palette.background.default}, ${theme.palette.background.default}) padding-box,
-             linear-gradient(135deg, ${theme.palette.background.paper}, #000000) border-box`
+             linear-gradient(135deg, ${theme.palette.background.paper}, ${theme.palette.background.shadow}) border-box`
     }
 
     const readiness_score_style = {
@@ -71,7 +72,7 @@ const RoomReadiness = ({
         backgroundColor: theme.palette.background.paper,
     }
 
-    return <div style={root_style}>
+    return <div className='flx justify-center align-center' style={root_style}>
 
         <div className='flx justify-center align-center gap10 wrap'>
 
@@ -108,7 +109,8 @@ const RoomReadiness = ({
                 </div>
 
                 <div className='txt-center' style={{
-                    marginTop: '10px'
+                    marginTop: '10px',
+                    whiteSpace: 'pre-line'
                 }}>
                     {readiness.explanation}
                 </div>
