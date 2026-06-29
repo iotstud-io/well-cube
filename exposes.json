@@ -5,20 +5,20 @@
             "name": "AirPlus",
             "defaultExport": true,
             "description": "Component to display all the telemetry from a WellCube Air+ device.",
-            "capabilities": {
-                "tvoc": "optional",
-                "pm10": "optional",
-                "pm25": "optional",
-                "proximity_meters": "optional",
-                "life_percent": "optional",
-                "noise_db": "optional",
-                "cct": "optional",
-                "brightness_lux": "optional",
-                "humidity": "optional",
-                "temp_celcius": "optional",
-                "co2": "optional",
-                "timemstamp_unix": "optional"
-            },
+            "operationRequirements": [
+                { "capabilityKey": "tvoc", "operationKey": "read", "optional": false },
+                { "capabilityKey": "pm10", "operationKey": "read", "optional": false },
+                { "capabilityKey": "pm25", "operationKey": "read", "optional": false },
+                { "capabilityKey": "proximity_meters", "operationKey": "read", "optional": false },
+                { "capabilityKey": "life_percent", "operationKey": "read", "optional": false },
+                { "capabilityKey": "noise_db", "operationKey": "read", "optional": false },
+                { "capabilityKey": "cct", "operationKey": "read", "optional": false },
+                { "capabilityKey": "brightness_lux", "operationKey": "read", "optional": false },
+                { "capabilityKey": "humidity", "operationKey": "read", "optional": false },
+                { "capabilityKey": "temp_celcius", "operationKey": "read", "optional": false },
+                { "capabilityKey": "co2", "operationKey": "read", "optional": false },
+                { "capabilityKey": "timemstamp_unix", "operationKey": "read", "optional": false }
+            ],
             "settings": [
                 {
                     "name": "temperature_format",
@@ -54,6 +54,14 @@
                 "temp_celcius": "optional",
                 "co2": "optional"
             },
+            "operationRequirements": [
+                { "capabilityKey": "tvoc", "operationKey": "read", "optional": false },
+                { "capabilityKey": "pm10", "operationKey": "read", "optional": false },
+                { "capabilityKey": "pm25", "operationKey": "read", "optional": false },
+                { "capabilityKey": "brightness_lux", "operationKey": "read", "optional": false },
+                { "capabilityKey": "temp_celcius", "operationKey": "read", "optional": false },
+                { "capabilityKey": "co2", "operationKey": "read", "optional": false }
+            ],
             "settings": [
                 {
                     "name": "temperature_format",

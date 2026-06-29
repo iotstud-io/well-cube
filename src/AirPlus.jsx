@@ -1,4 +1,3 @@
-import React, { Activity } from 'react'
 import { 
     colorFor,
     computeIndoorHealthIndex, 
@@ -36,7 +35,7 @@ const AirPlus = ({
     timemstamp_unix=Date.now()/1000,
     settings={},
 }) => {
-
+    
     const index = computeIndoorHealthIndex({pm25, pm10, co2, tvoc })
     const health = describeIndoorHealth(index, theme)
 
@@ -50,6 +49,8 @@ const AirPlus = ({
     if(settings?.temperature_format === 'c') {
         format = 'c'
     }
+
+    const shouldShowChart = historic?.length > 0 && show_chart
 
     const { temperature, temperature_formatted } = handleTemp(format, temp_fahrenheit, temp_celcius)
     const h = humidity !== null ? `${roundUpIfNeeded(humidity)}% RH`: ''
@@ -188,9 +189,9 @@ const AirPlus = ({
             </div>
         </div>
 
-        <Activity mode={historic?.length > 0 && show_chart ? 'visible' : 'hidden'}>
+        {shouldShowChart && (
             <HistoricChart historic={historic} theme={theme} />
-        </Activity>
+        )}
 
     </div>
 }
